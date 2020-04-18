@@ -1,0 +1,59 @@
+---
+- name: BENCHMARK
+  hosts: routers
+  gather_facts: false
+  connection: network_cli
+
+  tasks:
+    - name: run the command 'show interfaces'
+      ios_command:
+        commands: show interfaces
+      register: Output_Int
+
+    - debug: var=Output_Int
+
+    - name: save file
+      copy:
+        content: "{{ Output_Int.stdout }}"
+        dest: "/etc/ansible/logs/run.txt"
+
+    - name: Filtering out MTU values
+      become_user: root
+      shell: "python3 /etc/ansible/filters/filter_mtu.py"
+      register: mtu_out
+
+    - set_fact:
+       MTUValue: "{{ mtu_out.stdout }}"
+
+#    - name: Save Router File
+#      copy:
+#        content: "{{ MTUValue }}"
+#        dest: "/etc/ansible/benchmarks/{{ inventory_hostname }}.txt"
+
+    - name: Print Data
+      debug: var=MTUValue
+
+    - name: ping 10 to host
+      ios_command:
+        commands: ping 192.168.0.2 repeat 10
+      register: Output_Ping
+
+    - name: save file
+      copy:
+        content: "{{ Output_Ping.stdout }}"
+        dest: "/etc/ansible/logs/ping_run.txt"
+
+    - name: Filtering out PING values
+      become_user: root
+      shell: "python3 /etc/ansible/filters/filter_ping.py"
+      register: ping_out
+
+    - set_fact:
+       PINGValue: "{{ ping_out.stdout }}"
+
+    - name: print ping data
+      debug: var=PINGValue
+
+
+
+

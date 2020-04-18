@@ -1,6 +1,6 @@
 # Ansible_Benchmarker
-&nbsp;
-|-----------|&nbsp;
+\
+|-----------|\
 |  Ansible  |eth0      e1|----------|            |----------|&nbsp;
 |           |------------|  Switch  |            |  Switch  |&nbsp;
 |192.168.0.2|            |----------|            |----------|&nbsp;

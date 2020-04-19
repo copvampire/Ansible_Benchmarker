@@ -54,6 +54,12 @@
     - name: print ping data
       debug: var=PINGValue
 
+    - name: Format results
+      template:
+        src: "/etc/ansible/templates/results.j2"
+        dest: "/etc/ansible/benchmarks/{{ inventory_hostname }}.txt"
+
+
 
 
 

@@ -1,0 +1,14 @@
+
+Ping stats of 1000 pings to the benchmark host device:
+Success rate: {{ PINGValue["Success"] }}
+Time: {{ PINGValue["Time"] }}
+
+Interface stats for {{ inventory_hostname }}:
+
+{% for int, i in MTUValue.items() %}
+{%   set _i = MTUValue[int] %}
+Interface: {{ int }}
+  Bandwidth: {{ i["BW"] }}
+  MTU Value: {{ i["MTU"] }}
+
+{% endfor %}

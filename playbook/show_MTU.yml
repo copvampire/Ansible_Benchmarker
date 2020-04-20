@@ -5,14 +5,21 @@
   connection: network_cli
 
   tasks:
+    - name: Setup | Creating save file
+      copy:
+        content: ""
+        dest: "/etc/ansible/logs/RunVars.txt"
+    - name: Setup | Creating run file
+      copy:
+        content: ""
+        dest: "/etc/ansible/logs/run.txt"
+
     - name: run the command 'show interfaces'
       ios_command:
         commands: show interfaces
       register: Output_Int
 
-    - debug: var=Output_Int
-
-    - name: save file
+    - name: save interface file
       copy:
         content: "{{ Output_Int.stdout }}"
         dest: "/etc/ansible/logs/run.txt"
@@ -25,6 +32,11 @@
     - set_fact:
        MTUValue: "{{ mtu_out.stdout }}"
 
+    - name: Save MTU data
+      lineinfile:
+        path: /etc/ansible/logs/RunVars.txt
+        line: "{{ inventory_hostname }} = {{ MTUValue }}"
+
 #    - name: Save Router File
 #      copy:
 #        content: "{{ MTUValue }}"
@@ -33,9 +45,9 @@
     - name: Print Data
       debug: var=MTUValue
 
-    - name: ping 10 to host
+    - name: ping 1000 to host
       ios_command:
-        commands: ping 192.168.0.2 repeat 10
+        commands: ping 192.168.0.2 repeat 1000
       register: Output_Ping
 
     - name: save file
@@ -51,15 +63,19 @@
     - set_fact:
        PINGValue: "{{ ping_out.stdout }}"
 
-    - name: print ping data
-      debug: var=PINGValue
+    - name: Save Ping data
+      lineinfile:
+        path: /etc/ansible/logs/RunVars.txt
+        line: "{{ inventory_hostname }} = {{ PINGValue }}"
 
     - name: Format results
       template:
         src: "/etc/ansible/templates/results.j2"
-        dest: "/etc/ansible/benchmarks/{{ inventory_hostname }}.txt"
+        dest: "/etc/ansible/benchmarks/Results.txt"
+        #dest: "/etc/ansible/benchmarks/{{ inventory_hostname }}.txt"
 
-
-
+#    - name: Combine network to one file
+#      become_user: root
+#      shell: "python3 /etc/ansible/filters/combine_routers.py"
 
 

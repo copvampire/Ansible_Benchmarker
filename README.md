@@ -1,11 +1,10 @@
 # Ansible_Benchmarker
 
 <pre>
-|-----------|
-|  Ansible  |eth0      e1|----------|            |----------|
-|           |------------|  Switch  |            |  Switch  |
-|192.168.0.2|            |----------|            |----------|
-|-----------|                  |e0                     |e0
+|-----------|eth0      e1|----------|            |----------|
+|  Ansible  |------------|  Switch  |            |  Switch  |
+|-----------|            |----------|            |----------|
+                               |e0                     |e0
                                |                       |
                                |                       |
                                |                       |
@@ -23,4 +22,24 @@ G0/1 - 10.1.1.1
 Router 2:
 G0/0 - 192.168.1.1
 G0/1 - 10.1.1.2
+
+
+File Tree:
+etc/ansible/
+├── benchmarks/
+├── filters/
+│   ├── combine_routers.py
+│   ├── filter_mtu.py
+│   └── filter_ping.py
+├── group_vars/
+│   └── routers.yml
+├── host_vars/
+├── hosts
+├── logs/
+├── playbook/
+│   └── show_MTU.yml
+├── roles/
+└── templates/
+    └── results.j2
+
 </pre>

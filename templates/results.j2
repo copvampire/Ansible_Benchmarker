@@ -1,14 +1,19 @@
+{% for host in ansible_play_hosts %}
+
+Device {{ host }} stats:
 
 Ping stats of 1000 pings to the benchmark host device:
-Success rate: {{ PINGValue["Success"] }}
-Time: {{ PINGValue["Time"] }}
+Success rate: {{ hostvars[host].PINGValue["Success"] }}
+Time: {{ hostvars[host].PINGValue["Time"] }}
 
-Interface stats for {{ inventory_hostname }}:
+Interface stats:
 
-{% for int, i in MTUValue.items() %}
-{%   set _i = MTUValue[int] %}
+{% for int, i in hostvars[host].MTUValue.items() %}
+{%   set _i = hostvars[host].MTUValue[int] %}
 Interface: {{ int }}
   Bandwidth: {{ i["BW"] }}
   MTU Value: {{ i["MTU"] }}
+
+{% endfor %}
 
 {% endfor %}

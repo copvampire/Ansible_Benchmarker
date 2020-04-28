@@ -1,9 +1,13 @@
 #!/usr/bin/python3
 
 import re
+import argparse
 
 if __name__ == "__main__":
-    with open("/etc/ansible/logs/run.txt", "r") as run_file:
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--hostname')
+    args = parser.parse_args()
+    with open(f"/etc/ansible/logs/int_{args.hostname}.txt", "r") as run_file:
         log = run_file.read().split("\\n")
         out = {}
         interface = None
@@ -16,9 +20,5 @@ if __name__ == "__main__":
                     mtu = int(re.search(r"\d+", interfaceData[0]).group())
                     bw = int(re.search(r"\d+", interfaceData[1]).group())
                     out.update({interface: {"MTU": mtu, "BW": bw}})
-                #if "MTU" in line:
-                #    mtu = int(re.search(r"\d+", line).group())
-                #    out.update({interface: {"MTU": mtu}})
 
         print(out)
-

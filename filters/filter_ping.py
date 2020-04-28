@@ -1,10 +1,13 @@
-
 #!/usr/bin/python3
 
 import re
+import argparse
 
 if __name__ == "__main__":
-    with open("/etc/ansible/logs/ping_run.txt", "r") as run_file:
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--hostname')
+    args = parser.parse_args()
+    with open(f"/etc/ansible/logs/ping_{args.hostname}.txt", "r") as run_file:
         log = run_file.read().split("\\n")
         out = {}
 
@@ -15,6 +18,3 @@ if __name__ == "__main__":
                 pingTim = pingRaw[1].replace('\"]', '')
 
         print({ "Success": pingSuc, "Time": pingTim })
-
-
-

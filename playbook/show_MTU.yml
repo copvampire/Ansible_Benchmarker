@@ -54,6 +54,9 @@
     - set_fact:
        PINGValue: "{{ ping_out.stdout }}"
 
+    - name: Debug PING
+      debug: var=PINGValue
+
     - name: Save Ping data
       lineinfile:
         path: /etc/ansible/logs/RunVars.txt
@@ -62,11 +65,8 @@
     - name: Format results
       template:
         src: "/etc/ansible/templates/results.j2"
-        dest: "/etc/ansible/benchmarks/Results.txt"
-        #dest: "/etc/ansible/benchmarks/{{ inventory_hostname }}.txt"
+        dest: "/etc/ansible/benchmarks/{{ inventory_hostname }}.txt"
 
-#    - name: Combine network to one file
-#      become_user: root
-#      shell: "python3 /etc/ansible/filters/combine_routers.py"
-
-
+    - name: Combine network to one file
+      become_user: root
+      shell: "python3 /etc/ansible/filters/combine_devices.py"

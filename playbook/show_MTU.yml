@@ -36,9 +36,9 @@
     - name: Print Data
       debug: var=MTUValue
 
-    - name: ping 1000 to host
+    - name: ping 10 to host
       ios_command:
-        commands: ping 192.168.0.2 repeat 1000
+        commands: ping 192.168.0.2 repeat 10
       register: Output_Ping
 
     - name: save file

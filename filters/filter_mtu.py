@@ -10,15 +10,16 @@ if __name__ == "__main__":
     with open(f"/etc/ansible/logs/int_{args.hostname}.txt", "r") as run_file:
         log = run_file.read().split("\\n")
         out = {}
-        interface = None
         for line in log:
-            if "down" not in line and line[0] != " ":
+            if line[0] != " ":
+                interface_up = True
+                if "administratively down" in line:
+                    interface_up = False
                 interface = line.split(" ")[0].replace('[\"', '')
-            else:
-                if "MTU" in line and "BW" in line:
-                    interfaceData = line.split(", ")
-                    mtu = int(re.search(r"\d+", interfaceData[0]).group())
-                    bw = int(re.search(r"\d+", interfaceData[1]).group())
-                    out.update({interface: {"MTU": mtu, "BW": bw}})
+            elif "MTU" in line and "BW" in line and interface_up is True:
+                interfaceData = line.split(", ")
+                mtu = int(re.search(r"\d+", interfaceData[0]).group())
+                bw = int(re.search(r"\d+", interfaceData[1]).group())
+                out[interface] = {"MTU": mtu, "BW": bw}
 
         print(out)
